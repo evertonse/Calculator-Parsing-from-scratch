@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/style.css">
+    <script src="util/utils.js" defer></script>
+    <script src="resultado.js" defer></script>
+    <script src="src/app.js" defer></script>
+    <title>Calculadora</title>
+
+</head>
+
+<body>
+    <main>
+        <div class="caculadora-grid">
+            <div class="display">
+                <div class="error">
+                    <ion-icon id="error-ico"name="alert-circle-outline"></ion-icon>
+                </div>
+                <div data-resultado-display class="display-anterior">Resultado (<small>Aperte Enter ou click em "="</small>) </div>
+                <textarea autofocus contenteditable spellcheck="false" data-input class="display-posterior" name="" id=""></textarea>
+            </div>
+            <!-- Butões aqui -->
+            <button data-button-limpar class="operador limpar span-2">LIMPAR</button>
+            <button data-button-apagar class="operador apagar span-2">APAGAR</button>
+            <button data-button="+" class="operador">+</button>
+            <button data-button="*" class="operador">×</button>
+            <button data-button="-" class="operador">-</button>
+            <button data-button="/" class="operador">÷</button>
+            <button data-button="(" class="operador">(</button>
+            <button data-button=")" class="operador">)</button>
+            <button data-button-exponencial class="operador">y<sup>x</sup></button>
+            <button data-button-raiz class="operador"><sup style="font-size:small">x</sup><span style="font-size: x-large">&radic;<span style="text-decoration:overline;">&nbsp;y&nbsp;</span>
+</span></button>
+            <button data-button="1" class="numero">1</button>
+            <button data-button="2" class="numero">2</button>
+            <button data-button="3" class="numero">3</button>
+            <button data-button="4" class="numero">4</button>
+            <button data-button="5" class="numero">5</button>
+            <button data-button="6" class="numero">6</button>
+            <button data-button="7" class="numero">7</button>
+            <button data-button="8" class="numero">8</button>
+            <button data-button="9" class="numero">9</button>
+            <button data-button="0" class="numero">0</button>
+            <button data-button="." class="numero">.</button>
+            <button data-button-resultado class="igual">=</button>
+        </div>
+    </main>
+
+</body>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</html>
