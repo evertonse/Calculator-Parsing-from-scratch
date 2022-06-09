@@ -6,5 +6,5 @@ Written in mostly `functional paradigm`, this app parses text in a html input se
 - Run index.html on local server
 
 ## Preview:
-  <img src="./images/preview.png" width="950">
+  <img src="./images/preview.png" width="650">
 
