@@ -57,10 +57,13 @@ const splitOnce =
 
 /* Remove Operadores que estão colados */
 const removeExtraOperator = (string) => {
+	/* Se nenhuma string for dada retorna string vazia */
 	if (!string) {
 		return "";
 	}
-	/* replace n  ocurrencer with 1 */
+	/* Copia da string para manter a string originial intacta,
+	OBS: percebi deposi que js sempre passa por value string, então 
+	desconsidere sempre que ver isso */
 	let word = string.slice(0);
 	/* Se der match em qualquer um desses simbolos \-+√^ com 2 ou mais 
 		será substituido por apenas 1,
@@ -72,7 +75,6 @@ const removeExtraOperator = (string) => {
 				word = word.replace(match, "**");
 			}
 			word = word.replace(match, match[0]);
-			console.log(match[0]);
 		});
 	}
 
@@ -100,7 +102,7 @@ const removeLetters = (string) => {
 };
 
 /* Adicina multiplicação a uma expresão que tenha 
-uma mutiplicação implicita por uma parenseteses direito
+uma mutiplicação implicita por uma parenseteses direito ou esquerdo
 Ex: 2(2) = 2*(2)  */
 const changePar = (char) => (string) => {
 	if (!string) {
@@ -143,6 +145,7 @@ const changePar = (char) => (string) => {
 };
 const changeParRight = changePar(")");
 const changeParLeft = changePar("(");
+
 /* Muda quando há parenteses colados 
 Change when ")("  to "")*("    */
 const changeDoublePar = (string) => {
@@ -164,10 +167,6 @@ const changeDoublePar = (string) => {
 	return changeDoublePar(word);
 };
 
-/* Adicina multiplicação a uma expresão que tenha 
-uma mutiplicação implicita por uma parenseteses direito
-Ex: (2)2 = (2)*2  */
-
 /* # Remove Extra Decimals in a string*/
 const removeExtraDecimal = (string) => {
 	if (!string) {
@@ -175,14 +174,14 @@ const removeExtraDecimal = (string) => {
 	}
 	/* replace n  ocurrencer with 1 */
 	let word = string.slice(0);
-	console.log("from remove decimal word:", word);
 	let matches = word.match(/([\.,]+\d{0,}[\.,]+)/g);
+
 	if (matches == null) {
 		console.log(word);
 		return word;
 	}
-	console.log("matches:", matches);
-	matches.forEach((match) => {
+
+	matches.map((match) => {
 		const num = match.match(/([\d])+/g);
 		console.log(num);
 		if (num) {
@@ -191,6 +190,7 @@ const removeExtraDecimal = (string) => {
 			word = word.replace(match, ".");
 		}
 	});
+	/* chama ela demovo até que não tenha mais decimais na string */
 	return removeExtraDecimal(word);
 };
 const changeCochetes = (string) => {
@@ -200,8 +200,17 @@ const changeCochetes = (string) => {
 	let word = string.slice(0);
 	word = word.replace(/([\[]){1}/g, "(");
 	word = word.replace(/([\]]){1}/g, ")");
+	/* Troca chocetes por paresentesis para facilitar, 
+	ja eles que tem a mesma função sintatica */
 	return word;
 };
+
+/*  changeStartWithOperation:
+ Caso começe com uma operador retiramos ele
+mas caso seja negativo - retornamos (0 - string)
+
+o que, essencialmente é o mesmo que -2, porém forçamos ter 
+dois numeros entre cada operador sempre,mesmo que o usuario n veja */
 const changeStartWithOperation = (string) => {
 	if (!string) {
 		return "";
@@ -213,6 +222,8 @@ const changeStartWithOperation = (string) => {
 	if (word[0] == "-") word = "0" + word;
 	return word;
 };
+
+/* Impede virugla de ser digitada duas vezes, há não se que seja outro numero já */
 const changeVirgulaToPoint = (string) => {
 	if (!string) {
 		return "";
@@ -221,6 +232,8 @@ const changeVirgulaToPoint = (string) => {
 	word = word.replace(/([\,]){1}/g, ".");
 	return word;
 };
+
+/* Troca simbolo potenciação de ** para ^  */
 const changePonteciação = (string) => {
 	if (!string) {
 		return "";
@@ -235,6 +248,7 @@ const removeSingleOperation = (string) => {
 	if (!string) {
 		return "";
 	}
+	/* mesma logica do outro, queremos forçar um operador entre dois numeros, sempre. */
 	/* replace (+number) with (number)   with 1 or more ocurrences */
 	let word = string.slice(0);
 	let matches = word.match(/([^\d)]{1}[+-]+\d+)/g);
@@ -249,7 +263,7 @@ const removeSingleOperation = (string) => {
 };
 
 /* caso √ apareça sem o indice, indice 2 é dado, formando a raiz quadrada 
-	EX:√3  - >  (2√3)   ; OBS: Caso haja parensetese dentro da expressão de radiciação 
+	EX:√3  - >  2√3  ; OBS: Caso haja parensetese dentro da expressão de radiciação 
 	Esse função a desconsidera, #NoPar# #Com Recursão#
 	*/
 const createDefaultRadiciaçãoNoPar = (string) => {
@@ -262,12 +276,9 @@ const createDefaultRadiciaçãoNoPar = (string) => {
 	if (matches == null) {
 		return word;
 	}
-	matches?.forEach((match) => {
-		let [simbolo, radicando] = splitOnce(match)("√");
-		console.log(simbolo.slice(-1));
-		let replace = `${simbolo.slice(0, -1)}2√` + `${radicando}`;
-		console.log(simbolo);
-		console.log(replace);
+	matches?.map((match) => {
+		const [simbolo, radicando] = splitOnce(match)("√");
+		const replace = `${simbolo.slice(0, -1)}2√` + `${radicando}`;
 
 		/* Se raiz é diferentes de √, então quer dizer que a raiz está no começo da string */
 
@@ -279,6 +290,9 @@ const createDefaultRadiciaçãoNoPar = (string) => {
 
 /* Testa se um expressão está valida ou não */
 const isValidExp = (string) => {
+	/* Tentando dar catch em error e dispobilizar para o uzuario 
+	
+	OBS: Dentro da string de cada if explica brevemente sobre oq é cada regex*/
 	const validation = {
 		errors: [],
 		valid: false,
@@ -321,7 +335,7 @@ const isValidExp = (string) => {
 	if (validation.errors.length == 0) {
 		validation.valid = true;
 	}
-	console.log("isValidExp", validation.valid);
+	/* No final retornamos o "boletim de ocorrencia" na através da const validation */
 	return validation;
 };
 
@@ -351,6 +365,7 @@ const isValidParsedExp = (parsedExp) => {
 	else return true;
 };
 
+/* Composição de todos as sanitizações de um string para usar em expressões matematicas  */
 const sanitizeExp = compose(
 	changeStartWithOperation,
 	changePonteciação,
